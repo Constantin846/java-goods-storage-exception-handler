@@ -1,6 +1,8 @@
 package tk.project.exceptionhandler.goodsstorage.exceptions.product;
 
-public class ProductNotFoundException extends RuntimeException {
+import tk.project.exceptionhandler.goodsstorage.exceptions.EntityNotFoundException;
+
+public class ProductNotFoundException extends EntityNotFoundException {
     public ProductNotFoundException(String message) {
         super(message);
     }

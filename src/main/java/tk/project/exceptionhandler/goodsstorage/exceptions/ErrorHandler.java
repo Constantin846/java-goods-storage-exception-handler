@@ -1,6 +1,5 @@
 package tk.project.exceptionhandler.goodsstorage.exceptions;
 
-
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,15 +8,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import tk.project.exceptionhandler.goodsstorage.exceptions.customer.CustomerNotFoundException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.LoginExistsException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.RequestFindAccountNumberException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.RequestFindInnException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.EventHandlerNotFoundException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.KafkaConsumerJsonProcessingFoundException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotAccessException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotFoundException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyRejectedException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotCreateException;
@@ -25,9 +21,10 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.product.ArticleExists
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.OperationNotDefinedByStringException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductCountNotEnoughException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductNotAvailableException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductNotFoundException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductSpecificationException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductsNotFoundByIdsException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.product.image.MinioDownloadImageException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.product.image.MinioUploadImageException;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -106,12 +103,6 @@ public class ErrorHandler {
         return createApiError(e);
     }
 
-    @ExceptionHandler(ProductNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ApiError> handlerProductNotFoundException(final ProductNotFoundException e) {
-        return createApiError(e);
-    }
-
     @ExceptionHandler(ProductsNotFoundByIdsException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerProductsNotFoundByIdsException(final ProductsNotFoundByIdsException e) {
@@ -127,12 +118,6 @@ public class ErrorHandler {
     @ExceptionHandler(ProductNotAvailableException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerProductNotAvailableException(final ProductNotAvailableException e) {
-        return createApiError(e);
-    }
-
-    @ExceptionHandler(OrderNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ApiError> handlerOrderNotFoundException(final OrderNotFoundException e) {
         return createApiError(e);
     }
 
@@ -160,12 +145,6 @@ public class ErrorHandler {
         return createApiError(e);
     }
 
-    @ExceptionHandler(CustomerNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ApiError> handlerCustomerNotFoundException(final CustomerNotFoundException e) {
-        return createApiError(e);
-    }
-
     @ExceptionHandler(RequestFindAccountNumberException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerRequestFindAccountNumberException(final RequestFindAccountNumberException e) {
@@ -178,6 +157,26 @@ public class ErrorHandler {
     public ResponseEntity<ApiError> handlerRequestFindInnException(final RequestFindInnException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
         return createApiError(e, message);
+    }
+
+    @ExceptionHandler(MinioDownloadImageException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ApiError> handlerMinioDownloadImageException(final MinioDownloadImageException e) {
+        String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
+        return createApiError(e, message);
+    }
+
+    @ExceptionHandler(MinioUploadImageException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ApiError> handlerMinioUploadImageException(final MinioUploadImageException e) {
+        String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
+        return createApiError(e, message);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerEntityNotFoundException(final EntityNotFoundException e) {
+        return createApiError(e);
     }
 
     @ExceptionHandler
