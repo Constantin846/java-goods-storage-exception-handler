@@ -17,6 +17,8 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotAccessE
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyRejectedException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotCreateException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotProcessingException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.order.RequestConfirmOrderToOrchestratorException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ArticleExistsException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.OperationNotDefinedByStringException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductCountNotEnoughException;
@@ -127,6 +129,12 @@ public class ErrorHandler {
         return createApiError(e);
     }
 
+    @ExceptionHandler(OrderStatusNotProcessingException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<ApiError> handlerOrderStatusNotProcessingException(final OrderStatusNotProcessingException e) {
+        return createApiError(e);
+    }
+
     @ExceptionHandler(OrderStatusAlreadyCancelledException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerOrderStatusAlreadyCancelledException(final OrderStatusAlreadyCancelledException e) {
@@ -148,6 +156,13 @@ public class ErrorHandler {
     @ExceptionHandler(RequestFindAccountNumberException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerRequestFindAccountNumberException(final RequestFindAccountNumberException e) {
+        String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
+        return createApiError(e, message);
+    }
+
+    @ExceptionHandler(RequestConfirmOrderToOrchestratorException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ApiError> handlerRequestConfirmOrderToOrchestratorException(final RequestConfirmOrderToOrchestratorException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
         return createApiError(e, message);
     }
