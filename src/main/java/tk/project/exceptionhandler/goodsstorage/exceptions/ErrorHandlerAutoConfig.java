@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ErrorHandlerAutoConfig {
 
     @RestControllerAdvice
-    private class ErrorHandlerWrapper extends ErrorHandler {
+    private class ErrorHandlerBean extends ErrorHandler {
     }
 }

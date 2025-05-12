@@ -1,24 +1,23 @@
 package tk.project.exceptionhandler.goodsstorage.exceptions;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Instant;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Builder
+@ToString
+@EqualsAndHashCode
 public class ApiError {
 
-    String exceptionName;
+    private final String exceptionName;
 
-    String message;
+    private final String message;
 
-    Instant time;
+    private final Instant time;
 
-    String className;
+    private final String className;
 }

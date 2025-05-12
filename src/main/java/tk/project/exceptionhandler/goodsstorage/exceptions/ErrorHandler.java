@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.LoginExistsException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.RequestFindAccountNumberException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.RequestFindInnException;
@@ -25,8 +24,8 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductCountN
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductNotAvailableException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductSpecificationException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductsNotFoundByIdsException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.product.image.MinioDownloadImageException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.product.image.MinioUploadImageException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioDownloadImageException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioUploadImageException;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -46,27 +45,24 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler(ArticleExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerArticleExistsException(final ArticleExistsException e) {
         String message = Optional.ofNullable(e.getExistedProductId())
                 .map(id -> e.getMessage() + " And product id: " + id)
                 .orElseGet(e::getMessage);
 
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(LoginExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerLoginExistsException(final LoginExistsException e) {
         String message = Optional.ofNullable(e.getExistedCustomerId())
                 .map(id -> e.getMessage() + " And customer id: " + id)
                 .orElseGet(e::getMessage);
 
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerValidException(final MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getFieldErrors();
         Set<String> messages = new HashSet<>();
@@ -78,137 +74,125 @@ public class ErrorHandler {
         }
         String message = String.join(DELIMITER, messages);
 
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EventHandlerNotFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerEventHandlerNotFoundException(final EventHandlerNotFoundException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(KafkaConsumerJsonProcessingFoundException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerKafkaConsumerJsonProcessingFoundException(final KafkaConsumerJsonProcessingFoundException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OperationNotDefinedByStringException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerOperationNotDefinedBySymbolException(final OperationNotDefinedByStringException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProductSpecificationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ApiError> handlerProductSpecificationException(final ProductSpecificationException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ProductsNotFoundByIdsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerProductsNotFoundByIdsException(final ProductsNotFoundByIdsException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ProductCountNotEnoughException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerProductNotEnoughException(final ProductCountNotEnoughException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ProductNotAvailableException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerProductNotAvailableException(final ProductNotAvailableException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(OrderStatusNotCreateException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerOrderStatusNotCreateException(final OrderStatusNotCreateException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(OrderStatusNotProcessingException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerOrderStatusNotProcessingException(final OrderStatusNotProcessingException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(OrderStatusAlreadyCancelledException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerOrderStatusAlreadyCancelledException(final OrderStatusAlreadyCancelledException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(OrderStatusAlreadyRejectedException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<ApiError> handlerOrderStatusAlreadyRejectedException(final OrderStatusAlreadyRejectedException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(OrderNotAccessException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<ApiError> handlerOrderNotAccessException(final OrderNotAccessException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(RequestFindAccountNumberException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerRequestFindAccountNumberException(final RequestFindAccountNumberException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RequestConfirmOrderToOrchestratorException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerRequestConfirmOrderToOrchestratorException(final RequestConfirmOrderToOrchestratorException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(RequestFindInnException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerRequestFindInnException(final RequestFindInnException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MinioDownloadImageException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ApiError> handlerMinioDownloadImageException(final MinioDownloadImageException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(MinioUploadImageException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ApiError> handlerMinioUploadImageException(final MinioUploadImageException e) {
         String message = String.join(DELIMITER, e.getMessage(), e.getReasonException().getMessage());
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ApiError> handlerEntityNotFoundException(final EntityNotFoundException e) {
-        return createApiError(e);
+        return createApiError(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ApiError> handlerThrowable(final Throwable e) {
         String message = INTERNAL_SERVER_ERROR;
         log.warn(message, e);
-        return createApiError(e, message);
+        return createApiError(e, message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ResponseEntity<ApiError> createApiError(final Throwable e) {
-        return createApiError(e, e.getMessage());
+    private ResponseEntity<ApiError> createApiError(final Throwable e, final HttpStatus status) {
+        return createApiError(e, e.getMessage(), status);
     }
 
-    private ResponseEntity<ApiError> createApiError(final Throwable e, final String message) {
-        ApiError apiError = new ApiError(e.getClass().getSimpleName(), message,
-                Instant.now(), e.getStackTrace()[ZERO].getFileName());
-        return ResponseEntity.ofNullable(apiError);
+    private ResponseEntity<ApiError> createApiError(final Throwable e, final String message, final HttpStatus status) {
+        return ResponseEntity
+                .status(status)
+                .body(
+                        ApiError.builder()
+                                .exceptionName(e.getClass().getSimpleName())
+                                .message(message)
+                                .time(Instant.now())
+                                .className(e.getStackTrace()[ZERO].getFileName())
+                                .build()
+                );
     }
 }

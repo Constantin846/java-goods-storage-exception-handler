@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class RequestConfirmOrderToOrchestratorException extends RuntimeException {
-    private Throwable reasonException;
+    private final Throwable reasonException;
 
-    public RequestConfirmOrderToOrchestratorException(String message, Throwable e) {
+    public RequestConfirmOrderToOrchestratorException(final String message, final Throwable e) {
         super(message);
         reasonException = e;
     }
 
-    public RequestConfirmOrderToOrchestratorException(String message) {
+    public RequestConfirmOrderToOrchestratorException(final String message) {
         super(message);
+        this.reasonException = new RuntimeException("Reason exception was not specified");
     }
 }
