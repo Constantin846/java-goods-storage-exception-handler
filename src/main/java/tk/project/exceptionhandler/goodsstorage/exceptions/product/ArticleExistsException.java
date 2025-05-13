@@ -8,7 +8,7 @@ import java.util.UUID;
 public class ArticleExistsException extends RuntimeException {
     private final UUID existedProductId;
 
-    public ArticleExistsException(String message, UUID existedProductId) {
+    public ArticleExistsException(final String message, final UUID existedProductId) {
         super(message);
         this.existedProductId = existedProductId;
     }

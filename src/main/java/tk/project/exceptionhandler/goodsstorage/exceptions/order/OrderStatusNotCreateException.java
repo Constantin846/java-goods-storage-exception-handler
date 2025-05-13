@@ -1,7 +1,7 @@
 package tk.project.exceptionhandler.goodsstorage.exceptions.order;
 
 public class OrderStatusNotCreateException extends RuntimeException {
-    public OrderStatusNotCreateException(String message) {
+    public OrderStatusNotCreateException(final String message) {
         super(message);
     }
 }

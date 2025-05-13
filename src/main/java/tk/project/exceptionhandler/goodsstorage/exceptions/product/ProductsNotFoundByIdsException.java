@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ProductsNotFoundByIdsException extends RuntimeException {
     private final Set<UUID> notFoundProductIds;
 
-    public ProductsNotFoundByIdsException(String message, Collection<UUID> notFoundProductIds) {
+    public ProductsNotFoundByIdsException(final String message, final Collection<UUID> notFoundProductIds) {
         super(message);
         this.notFoundProductIds = new HashSet<>(notFoundProductIds);
     }

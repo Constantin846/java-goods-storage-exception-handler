@@ -6,7 +6,7 @@ import lombok.Getter;
 public class LoginExistsException extends RuntimeException {
     private final Long existedCustomerId;
 
-    public LoginExistsException(String message, Long existedCustomerId) {
+    public LoginExistsException(final String message, final Long existedCustomerId) {
         super(message);
         this.existedCustomerId = existedCustomerId;
     }

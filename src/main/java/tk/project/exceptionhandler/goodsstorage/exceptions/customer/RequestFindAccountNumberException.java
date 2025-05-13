@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class RequestFindAccountNumberException extends RuntimeException {
-    private Throwable reasonException;
+    private final Throwable reasonException;
 
-    public RequestFindAccountNumberException(String message, Throwable e) {
+    public RequestFindAccountNumberException(final String message, final Throwable e) {
         super(message);
         reasonException = e;
     }
 
-    public RequestFindAccountNumberException(String message) {
+    public RequestFindAccountNumberException(final String message) {
         super(message);
+        this.reasonException = new RuntimeException("Reason exception was not specified");
     }
 }

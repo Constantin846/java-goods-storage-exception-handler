@@ -4,16 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 public class RequestGetCurrenciesException extends RuntimeException {
-    private Throwable reasonException;
+    private final Throwable reasonException;
 
-    public RequestGetCurrenciesException(String message, Throwable e) {
+    public RequestGetCurrenciesException(final String message, final Throwable e) {
         super(message);
         this.reasonException = e;
     }
 
-    public RequestGetCurrenciesException(String message) {
+    public RequestGetCurrenciesException(final String message) {
         super(message);
+        this.reasonException = new RuntimeException("Reason exception was not specified");
     }
 }
