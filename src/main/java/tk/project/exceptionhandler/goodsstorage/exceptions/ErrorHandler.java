@@ -12,10 +12,12 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.customer.RequestFindA
 import tk.project.exceptionhandler.goodsstorage.exceptions.customer.RequestFindInnException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.EventHandlerNotFoundException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.kafka.KafkaConsumerJsonProcessingFoundException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioDownloadImageException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioUploadImageException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderNotAccessException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyCancelledException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusAlreadyRejectedException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotCreateException;
+import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotCreatedException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.OrderStatusNotProcessingException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.order.RequestConfirmOrderToOrchestratorException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ArticleExistsException;
@@ -24,8 +26,6 @@ import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductCountN
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductNotAvailableException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductSpecificationException;
 import tk.project.exceptionhandler.goodsstorage.exceptions.product.ProductsNotFoundByIdsException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioDownloadImageException;
-import tk.project.exceptionhandler.goodsstorage.exceptions.minio.MinioUploadImageException;
 
 import java.time.Instant;
 import java.util.HashSet;
@@ -112,8 +112,8 @@ public class ErrorHandler {
         return createApiError(e, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(OrderStatusNotCreateException.class)
-    public ResponseEntity<ApiError> handlerOrderStatusNotCreateException(final OrderStatusNotCreateException e) {
+    @ExceptionHandler(OrderStatusNotCreatedException.class)
+    public ResponseEntity<ApiError> handlerOrderStatusNotCreateException(final OrderStatusNotCreatedException e) {
         return createApiError(e, HttpStatus.CONFLICT);
     }
 
